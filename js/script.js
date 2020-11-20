@@ -180,6 +180,7 @@ let blackjackGame = {
 	'wins': 0,
 	'losses': 0,
 	'draws': 0,
+	'HitOver': false,
 	'isStand': false,
 	'turnsOver': false
 };
@@ -200,12 +201,16 @@ document.getElementById('blackjack-deal-button').addEventListener("click", black
 
 function blackjackHit()
 {
-	if(blackjackGame['isStand'] === false)
+	blackjackGame['HitOver'] = false;
+	blackjackGame['isStand'] = false;
+	if(blackjackGame['isStand'] === false && blackjackGame['HitOver'] === false)
 	{
 		let card = randomCards();
 		showCard(card, YOU);
 		updateScore(card, YOU);
 		showScore(YOU);
+		blackjackGame['HitOver'] = true;
+		blackjackGame['isStand'] = true;
 	}
 }
 function randomCards()
@@ -228,6 +233,7 @@ function blackjackDeal()
 	if(blackjackGame['turnsOver'] === true)
 	{
 		blackjackGame['isStand'] = false;
+		blackjackGame['HitOver'] = false;
 
 		let yourImages = document.querySelector('#your-box').querySelectorAll('img');
 		let dealerImages = document.querySelector('#dealer-box').querySelectorAll('img');
@@ -292,20 +298,23 @@ function sleep(ms)
 }
 async function dealerLogic()
 {
-	blackjackGame['isStand'] = true;
-
-	while(DEALER['score'] < 16 && blackjackGame['isStand'] === true)
+	if(blackjackGame['isStand'] === true)
 	{
-		let card = randomCards();
-		showCard(card, DEALER);
-		updateScore(card, DEALER);
-		showScore(DEALER);
-		await sleep(1000);
-	}
+		while(DEALER['score'] < 16 && blackjackGame['isStand'] === true && blackjackGame['HitOver'] === true)
+		{
+			let card = randomCards();
+			showCard(card, DEALER);
+			updateScore(card, DEALER);
+			showScore(DEALER);
+			await sleep(1000);
+		}
 
-	blackjackGame['turnsOver'] = true;
-	let winner = computeWinner();
-	showResult(winner);
+		blackjackGame['isStand'] = false;
+		blackjackGame['turnsOver'] = true;
+
+		let winner = computeWinner();
+		showResult(winner);
+	}
 }
 function computeWinner()
 {
