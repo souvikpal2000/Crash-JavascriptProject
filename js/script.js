@@ -19,11 +19,22 @@ function reset()
 function generateCat()
 {
 	var image = document.createElement('img');
+	image.className = 'cat';
 	var div = document.getElementById('flex-cat-gen');
 	image.src = "./images/cat.gif";
 	div.appendChild(image);
 }
-
+function resetCat()
+{
+	allCatImages = document.getElementsByClassName('cat');
+	len = allCatImages.length;
+	let i = len-1;
+	while(i >= 0)
+	{
+		allCatImages[i].remove();
+		i--;
+	}
+}
 //Challenge 3
 function rpsGame(yourChoice)
 {
@@ -103,7 +114,6 @@ function rpsFrontend(humanImageChoice, botImageChoice, finalMessage)
 	botDiv.innerHTML = "<img src='" + imagesDatabase[botImageChoice] + "' style='box-shadow: 0px 10px 50px rgba(243, 38, 24, 1);'>";
 	document.getElementById('flex-box-container-3').appendChild(botDiv);
 }
-
 //Challenge 4
 var all_buttons = document.getElementsByTagName('button');
 //console.log(all_buttons);
